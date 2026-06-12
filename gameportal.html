@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS GAMES — Oyun Portalı</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050a14;
+  --bg2: #0a1020;
+  --bg3: #0d1830;
+  --accent: #00f5ff;
+  --accent2: #ff006e;
+  --accent3: #7b2fff;
+  --gold: #ffd700;
+  --text: #e0eaff;
+  --text2: #8899bb;
+  --card: #0c1525;
+  --border: #1a2a4a;
+  --glow: 0 0 20px rgba(0,245,255,0.3);
+  --glow2: 0 0 20px rgba(255,0,110,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 50%,rgba(123,47,255,0.07) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(0,245,255,0.07) 0%,transparent 60%);pointer-events:none;z-index:0;}
+
+/* ─── NAVBAR ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(5,10,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;height:64px;gap:1rem;}
+.logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.4rem;color:var(--accent);text-shadow:var(--glow);letter-spacing:3px;flex:1;}
+.logo span{color:var(--accent2);}
+.nav-links{display:flex;gap:0.5rem;}
+.nav-btn{background:none;border:1px solid var(--border);color:var(--text2);padding:0.4rem 1rem;border-radius:4px;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:0.85rem;transition:all 0.2s;}
+.nav-btn:hover,.nav-btn.active{border-color:var(--accent);color:var(--accent);box-shadow:var(--glow);}
+.nav-btn.admin-btn{border-color:var(--accent2);color:var(--accent2);}
+.nav-btn.admin-btn:hover{box-shadow:var(--glow2);}
+
+/* ─── PAGES ─── */
+.page{display:none;min-height:100vh;padding-top:64px;}
+.page.active{display:block;}
+
+/* ─── HERO ─── */
+.hero{padding:4rem 2rem 2rem;text-align:center;position:relative;}
+.hero-title{font-family:'Orbitron',monospace;font-size:clamp(2rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1rem;}
+.hero-title .line1{color:var(--text);}
+.hero-title .line2{color:var(--accent);text-shadow:var(--glow);}
+.hero-sub{color:var(--text2);font-size:1.1rem;margin-bottom:2rem;max-width:600px;margin-left:auto;margin-right:auto;}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-bottom:3rem;}
+.stat{text-align:center;}
+.stat-num{font-family:'Orbitron',monospace;font-size:2rem;font-weight:700;color:var(--accent);}
+.stat-label{color:var(--text2);font-size:0.8rem;letter-spacing:2px;}
+.search-bar{max-width:500px;margin:0 auto 3rem;position:relative;}
+.search-bar input{width:100%;padding:0.9rem 1.2rem 0.9rem 3rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:1rem;outline:none;transition:border-color 0.2s;}
+.search-bar input:focus{border-color:var(--accent);box-shadow:var(--glow);}
+.search-bar::before{content:'🔍';position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:1rem;}
+.filters{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;}
+.filter-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:0.4rem 1rem;border-radius:20px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;}
+.filter-btn:hover,.filter-btn.active{background:var(--accent);border-color:var(--accent);color:var(--bg);}
+
+/* ─── GAME GRID ─── */
+.section-title{font-family:'Orbitron',monospace;font-size:1.3rem;color:var(--text);margin:2rem 2rem 1rem;display:flex;align-items:center;gap:1rem;}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent);}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;padding:1rem 2rem 3rem;}
+.game-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.3s;position:relative;}
+.game-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:var(--glow);}
+.game-thumb{height:160px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden;}
+.game-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,var(--card));}
+.game-badge{position:absolute;top:10px;right:10px;background:var(--accent2);color:white;font-size:0.7rem;padding:2px 8px;border-radius:10px;font-weight:700;z-index:1;}
+.game-badge.new{background:var(--accent);color:var(--bg);}
+.game-badge.hot{background:#ff4500;}
+.game-info{padding:1rem;}
+.game-name{font-family:'Orbitron',monospace;font-size:0.95rem;font-weight:700;margin-bottom:0.4rem;color:var(--text);}
+.game-genre{color:var(--accent);font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:0.5rem;}
+.game-desc{color:var(--text2);font-size:0.82rem;line-height:1.5;margin-bottom:0.8rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.game-meta{display:flex;align-items:center;justify-content:space-between;}
+.stars{color:var(--gold);font-size:0.85rem;}
+.play-count{color:var(--text2);font-size:0.78rem;}
+.play-btn{background:linear-gradient(135deg,var(--accent),var(--accent3));color:var(--bg);border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.8rem;font-family:'Exo 2',sans-serif;transition:opacity 0.2s;}
+.play-btn:hover{opacity:0.85;}
+
+/* ─── GAME MODAL ─── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;width:min(900px,95vw);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;}
+.modal-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;}
+.modal-header h2{font-family:'Orbitron',monospace;font-size:1.1rem;flex:1;}
+.modal-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.5rem;line-height:1;}
+.modal-body{display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden;}
+.game-canvas-wrap{background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;position:relative;}
+#gameCanvas{border:1px solid var(--border);border-radius:4px;max-width:100%;max-height:400px;}
+.game-sidebar{padding:1.5rem;overflow-y:auto;border-left:1px solid var(--border);}
+.game-sidebar h3{font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--accent);margin-bottom:1rem;}
+.how-to-play{color:var(--text2);font-size:0.85rem;line-height:1.7;margin-bottom:1.5rem;}
+.score-display{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;margin-bottom:1rem;}
+.score-display .score-val{font-family:'Orbitron',monospace;font-size:2rem;color:var(--accent);font-weight:700;}
+.score-display .score-lbl{color:var(--text2);font-size:0.75rem;letter-spacing:2px;}
+.rating-section{margin-bottom:1rem;}
+.rating-stars{display:flex;gap:4px;margin-bottom:0.5rem;}
+.rating-star{font-size:1.5rem;cursor:pointer;filter:grayscale(1);transition:filter 0.1s;}
+.rating-star:hover,.rating-star.active{filter:grayscale(0);}
+.comment-box{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:0.7rem;border-radius:6px;font-family:'Exo 2',sans-serif;font-size:0.85rem;resize:vertical;min-height:70px;}
+.submit-rating{background:var(--accent2);color:white;border:none;padding:0.5rem 1.2rem;border-radius:6px;cursor:pointer;font-weight:600;margin-top:0.5rem;width:100%;}
+.comments-list{margin-top:1rem;}
+.comment-item{background:var(--bg3);border-radius:6px;padding:0.7rem;margin-bottom:0.5rem;font-size:0.82rem;}
+.comment-stars{color:var(--gold);font-size:0.75rem;}
+.comment-text{color:var(--text2);margin-top:0.3rem;}
+@media(max-width:640px){.modal-body{grid-template-columns:1fr;}.game-sidebar{max-height:250px;}}
+
+/* ─── ADMIN PANEL ─── */
+.admin-page{padding:80px 2rem 2rem;}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;}
+.admin-title{font-family:'Orbitron',monospace;font-size:1.8rem;color:var(--accent2);}
+.admin-stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem;}
+.admin-stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;}
+.admin-stat-val{font-family:'Orbitron',monospace;font-size:1.8rem;color:var(--accent);font-weight:700;}
+.admin-stat-lbl{color:var(--text2);font-size:0.8rem;margin-top:0.3rem;}
+.admin-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:2rem;}
+.admin-table-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.admin-table-header h3{font-family:'Orbitron',monospace;font-size:1rem;color:var(--text);}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--bg3);color:var(--text2);font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.8rem 1rem;text-align:left;}
+td{padding:0.8rem 1rem;font-size:0.85rem;border-top:1px solid var(--border);}
+tr:hover td{background:rgba(0,245,255,0.02);}
+.td-game{display:flex;align-items:center;gap:0.7rem;}
+.td-icon{font-size:1.5rem;}
+.td-name{font-weight:600;font-size:0.88rem;}
+.td-genre{color:var(--text2);font-size:0.75rem;}
+.badge-genre{background:var(--bg3);color:var(--accent);font-size:0.72rem;padding:2px 8px;border-radius:10px;border:1px solid var(--accent);display:inline-block;}
+.rating-bar{display:flex;align-items:center;gap:0.5rem;}
+.bar-track{flex:1;height:6px;background:var(--bg3);border-radius:3px;}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(to right,var(--accent2),var(--accent));}
+.json-export{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.5rem;font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--text2);max-height:300px;overflow-y:auto;white-space:pre;}
+.json-key{color:var(--accent);}
+.json-str{color:var(--gold);}
+.json-num{color:var(--accent2);}
+.export-btn{background:var(--bg3);border:1px solid var(--accent);color:var(--accent);padding:0.5rem 1.2rem;border-radius:6px;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:0.85rem;transition:all 0.2s;}
+.export-btn:hover{background:var(--accent);color:var(--bg);}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--accent3);}
+
+/* ─── GAME SCREENS ─── */
+.game-ui{position:relative;width:100%;display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1rem;}
+.game-controls{display:flex;gap:0.5rem;margin-top:0.5rem;}
+.gc-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.4rem 0.9rem;border-radius:6px;cursor:pointer;font-size:0.8rem;}
+.gc-btn:hover{border-color:var(--accent);color:var(--accent);}
+.game-msg{font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--accent);min-height:1.5rem;text-align:center;}
+
+/* animations */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.game-card{animation:slideIn 0.4s ease both;}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">NEXUS<span>GAMES</span></div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home')">🎮 Oyunlar</button>
+    <button class="nav-btn admin-btn" onclick="showPage('admin')">⚙️ Admin Panel</button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-title">
+      <div class="line1">SONSUZ EĞLENCE</div>
+      <div class="line2">NEXUS GAMES</div>
+    </div>
+    <div class="hero-sub">Tarayıcında oyna, puan topla, yorum bırak. 20 farklı oyun seni bekliyor!</div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" id="stat-games">20</div><div class="stat-label">OYUN</div></div>
+      <div class="stat"><div class="stat-num" id="stat-plays">0</div><div class="stat-label">OYNAMA</div></div>
+      <div class="stat"><div class="stat-num" id="stat-comments">0</div><div class="stat-label">YORUM</div></div>
+    </div>
+    <div class="search-bar"><input type="text" placeholder="Oyun ara..." oninput="filterGames(this.value)"></div>
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFilter('tümü',this)">Tümü</button>
+      <button class="filter-btn" onclick="setFilter('aksiyon',this)">Aksiyon</button>
+      <button class="filter-btn" onclick="setFilter('bulmaca',this)">Bulmaca</button>
+      <button class="filter-btn" onclick="setFilter('strateji',this)">Strateji</button>
+      <button class="filter-btn" onclick="setFilter('yarış',this)">Yarış</button>
+      <button class="filter-btn" onclick="setFilter('spor',this)">Spor</button>
+      <button class="filter-btn" onclick="setFilter('klasik',this)">Klasik</button>
+    </div>
+  </div>
+  <div class="section-title">🕹️ TÜM OYUNLAR</div>
+  <div class="games-grid" id="gamesGrid"></div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="page-admin">
+  <div class="admin-page">
+    <div class="admin-header">
+      <div class="admin-title">⚙️ ADMIN PANELİ</div>
+      <button class="export-btn" onclick="exportJSON()">📥 JSON İndir</button>
+    </div>
+    <div class="admin-stats-row" id="adminStatsRow"></div>
+    <div class="admin-table-wrap">
+      <div class="admin-table-header">
+        <h3>📊 VERİ SETİ — TÜM OYUNLAR</h3>
+        <span style="color:var(--text2);font-size:0.8rem" id="lastUpdate"></span>
+      </div>
+      <div style="overflow-x:auto"><table id="adminTable">
+        <thead><tr>
+          <th>#</th><th>OYUN</th><th>TÜR</th><th>PUAN</th><th>DEĞERLENDİRME</th><th>OYNAMA</th><th>YORUMLAR</th><th>DURUM</th>
+        </tr></thead>
+        <tbody id="adminTbody"></tbody>
+      </table></div>
+    </div>
+    <div class="admin-table-wrap">
+      <div class="admin-table-header"><h3>🗃️ JSON VERİ SETİ</h3></div>
+      <div class="json-export" id="jsonView"></div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="modalEmoji" style="font-size:1.8rem"></span>
+      <h2 id="modalTitle"></h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="game-canvas-wrap">
+        <div class="game-ui" id="gameUI"></div>
+      </div>
+      <div class="game-sidebar">
+        <div class="score-display">
+          <div class="score-val" id="liveScore">0</div>
+          <div class="score-lbl">PUAN</div>
+        </div>
+        <h3>📖 NASIL OYNANIR</h3>
+        <div class="how-to-play" id="howToPlay"></div>
+        <h3>⭐ DEĞERLENDİR</h3>
+        <div class="rating-section">
+          <div class="rating-stars" id="ratingStars">
+            <span class="rating-star" onclick="setRating(1)">⭐</span>
+            <span class="rating-star" onclick="setRating(2)">⭐</span>
+            <span class="rating-star" onclick="setRating(3)">⭐</span>
+            <span class="rating-star" onclick="setRating(4)">⭐</span>
+            <span class="rating-star" onclick="setRating(5)">⭐</span>
+          </div>
+          <textarea class="comment-box" id="commentBox" placeholder="Yorumun..."></textarea>
+          <button class="submit-rating" onclick="submitRating()">✅ Gönder</button>
+        </div>
+        <div class="comments-list" id="commentsList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// DATASET — 20 OYUN
+// ════════════════════════════════════════════════════════
+const GAMES = [
+  {
+    id:1, name:"Snake Nexus", emoji:"🐍", genre:"klasik",
+    desc:"Efsanevi yılan oyununun neon versiyonu. Yemi ye, büy, duvarlara çarpma!",
+    howto:"Ok tuşları veya WASD ile yılanı yönlendir. Yemi ye puan kazan. Duvara veya kendine çarpma!",
+    badge:"hot", color:"#00f5ff",
+    rating:4.7, plays:12543, scores:[],
+    comments:[{stars:5,text:"Süper klasik! Bitirene kadar duramadım."},{stars:4,text:"Güzel ama biraz hızlı."}]
+  },
+  {
+    id:2, name:"Pong Wars", emoji:"🏓", genre:"klasik",
+    desc:"İki topla klasik Pong! Rakibini geç ve skor tablosunda zirveye ulaş.",
+    howto:"Sol oyuncu: W/S tuşları. Sağ oyuncu: Yukarı/Aşağı ok. İlk 7 sayı yapan kazanır.",
+    badge:"new", color:"#ff006e",
+    rating:4.2, plays:8920, scores:[],
+    comments:[{stars:4,text:"2 kişi oynamak çok eğlenceli!"},{stars:5,text:"Mükemmel!"}]
+  },
+  {
+    id:3, name:"Space Invaders X", emoji:"👾", genre:"aksiyon",
+    desc:"Uzaylı istilasını durdur! Klasik shooter oyunun modern yorumu.",
+    howto:"Sol/Sağ ok: hareket. Boşluk: ateş et. Kalkan arkasına saklan. Tüm dalgaları temizle!",
+    badge:"hot", color:"#7b2fff",
+    rating:4.8, plays:19876, scores:[],
+    comments:[{stars:5,text:"Nostaljik his ve modern grafik harika!"},{stars:5,text:"En sevdiğim oyun!"}]
+  },
+  {
+    id:4, name:"Memory Master", emoji:"🧠", genre:"bulmaca",
+    desc:"Kartları eşleştir, hafızanı güçlendir! Süre dolmadan önce tümünü bul.",
+    howto:"Kartlara tıkla ve aynı olanları eşleştir. Ne kadar hızlı bitirirsen o kadar çok puan alırsın.",
+    badge:"", color:"#ffd700",
+    rating:4.5, plays:7654, scores:[],
+    comments:[{stars:5,text:"Çocuklarımla oynuyorum, harika!"},{stars:4,text:"Beyin jimnastiği için mükemmel."}]
+  },
+  {
+    id:5, name:"Tetris Blitz", emoji:"🟦", genre:"bulmaca",
+    desc:"Hızlı tempolu Tetris! Satırları tamamla, combo yap, rekor kır.",
+    howto:"Sol/Sağ: hareket. Yukarı: döndür. Aşağı: hızlı düşür. Satırları tamamla, temizle!",
+    badge:"hot", color:"#00f5ff",
+    rating:4.9, plays:23456, scores:[],
+    comments:[{stars:5,text:"Bağımlılık yapıyor adeta."},{stars:5,text:"Mükemmel tetris hissi!"}]
+  },
+  {
+    id:6, name:"Dino Runner", emoji:"🦖", genre:"aksiyon",
+    desc:"Dinozor koşusu! Engelleri aş, puan topla, ne kadar uzağa gidebilirsin?",
+    howto:"Boşluk veya Yukarı ok ile zıpla. Kaktüsleri ve kuşları atla. Hız giderek artar!",
+    badge:"", color:"#ff4500",
+    rating:4.3, plays:15321, scores:[],
+    comments:[{stars:4,text:"İnternet kesilince oynayabileceğim bir oyun!"},{stars:5,text:"Muhteşem!"}]
+  },
+  {
+    id:7, name:"2048 Galaxy", emoji:"🌌", genre:"strateji",
+    desc:"Sayıları birleştir, 2048'e ulaş! Galaksi temalı strateji bulmacası.",
+    howto:"Ok tuşlarıyla kaydır. Aynı sayılar birleşir. 2048 kutucuğuna ulaşmaya çalış!",
+    badge:"new", color:"#ffd700",
+    rating:4.6, plays:11234, scores:[],
+    comments:[{stars:5,text:"Stratejik düşünmeyi sevenler için!"},{stars:4,text:"2048e ulaşmak zor ama tatmin edici."}]
+  },
+  {
+    id:8, name:"Crossword Ultra", emoji:"📝", genre:"bulmaca",
+    desc:"Türkçe çapraz bulmaca! Kelimeleri bul, harfleri tamamla.",
+    howto:"Boşluklara tıkla, harf gir. Yatay ve dikey ipuçlarını kullan. Tümünü doldur!",
+    badge:"", color:"#00f5ff",
+    rating:4.1, plays:5432, scores:[],
+    comments:[{stars:4,text:"Kelime hazinem genişledi."},{stars:5,text:"Harika bir bulmaca!"}]
+  },
+  {
+    id:9, name:"Flappy Neon", emoji:"🐦", genre:"aksiyon",
+    desc:"Neon dünyasında uç! Borulara çarpmadan ne kadar ileri gidebilirsin?",
+    howto:"Tıkla veya boşluk'a bas. Her tıklamada kuş yukarı çıkar. Borular arasından geç!",
+    badge:"hot", color:"#ff006e",
+    rating:4.4, plays:18765, scores:[],
+    comments:[{stars:4,text:"Sinir bozucu ama bırakmıyorum!"},{stars:5,text:"Grafikleri çok güzel."}]
+  },
+  {
+    id:10, name:"Minesweeper Pro", emoji:"💣", genre:"strateji",
+    desc:"Mayın tarlasını temizle! Zekanı kullan, mayınları bul ve işaretle.",
+    howto:"Sol tık: aç. Sağ tık: bayrak koy. Sayılar komşu mayın sayısını gösterir. Güvenlileri aç!",
+    badge:"", color:"#7b2fff",
+    rating:4.5, plays:9876, scores:[],
+    comments:[{stars:5,text:"Klasik ama hiç eskimiyor."},{stars:4,text:"Mantık oyunlarının başı!"}]
+  },
+  {
+    id:11, name:"Racing Pixel", emoji:"🏎️", genre:"yarış",
+    desc:"Piksel yolda hız rekoru kır! Araçları aş, virajları geç.",
+    howto:"Sol/Sağ ok ile şerit değiştir. Araçlara çarpma. Ne kadar çok geçersen o kadar puan!",
+    badge:"new", color:"#ff4500",
+    rating:4.3, plays:13456, scores:[],
+    comments:[{stars:5,text:"Hız tutkunlarına tam!"},{stars:4,text:"Grafikleri basit ama oynanışı harika."}]
+  },
+  {
+    id:12, name:"Basketball Shoot", emoji:"🏀", genre:"spor",
+    desc:"Basketbol atış oyunu! Gücü ve açıyı ayarla, potaya gönder.",
+    howto:"Tıkla ve sürükle ile güç/açı ayarla. Bırak ve at! Her isabette puan, zor açılarda bonus!",
+    badge:"", color:"#ff8c00",
+    rating:4.2, plays:8765, scores:[],
+    comments:[{stars:4,text:"Fizik mekaniği çok iyi."},{stars:5,text:"Saatlerce oynadım!"}]
+  },
+  {
+    id:13, name:"Word Scramble", emoji:"🔤", genre:"bulmaca",
+    desc:"Karışık harfleri düzenle ve kelimeyi bul! Süre dolmadan düşün.",
+    howto:"Ekrandaki harfler karışık verilir. Doğru kelimeyi tahmin et ve gir. 60 saniyede kaç kelime?",
+    badge:"", color:"#00d4aa",
+    rating:4.0, plays:6543, scores:[],
+    comments:[{stars:4,text:"Kelime oyunları sever herkes!"},{stars:3,text:"Biraz basit ama eğlenceli."}]
+  },
+  {
+    id:14, name:"Tower Defense X", emoji:"🏰", genre:"strateji",
+    desc:"Düşman dalgalarını durdur! Kuleleri yerleştir, savunmanı kur.",
+    howto:"Kuleler satın al ve yola yakın yerlere koy. Düşmanlar geçmeden durdur. Her dalga daha zor!",
+    badge:"new", color:"#7b2fff",
+    rating:4.7, plays:14567, scores:[],
+    comments:[{stars:5,text:"Strateji oyunlarının en güzeli!"},{stars:5,text:"Saatlerce oynadım, durduramıyorum!"}]
+  },
+  {
+    id:15, name:"Brick Breaker", emoji:"🧱", genre:"klasik",
+    desc:"Topla tuğlaları kır! Combo yap, güç artırıcı yakala, tümünü temizle.",
+    howto:"Mouse veya sol/sağ ok ile platformu hareket ettir. Topa vur, tuğlaları kır. Topu düşürme!",
+    badge:"hot", color:"#ff006e",
+    rating:4.4, plays:16789, scores:[],
+    comments:[{stars:5,text:"Çok bağımlılık yapan klasik."},{stars:4,text:"Güç artırıcılar harika!"}]
+  },
+  {
+    id:16, name:"Tic-Tac-Toe AI", emoji:"❌", genre:"strateji",
+    desc:"Yapay zekaya karşı XOX! Basit görünen ama kazanması zor.",
+    howto:"Kareye tıkla ve X'ini koy. AI karşı oynar. Üç sıra yap, kazan! Zor modda AI neredeyse yenilmez.",
+    badge:"", color:"#ffd700",
+    rating:3.9, plays:5678, scores:[],
+    comments:[{stars:4,text:"AI gerçekten zor!"},{stars:3,text:"Klasik ama AI biraz çok iyi."}]
+  },
+  {
+    id:17, name:"Fruit Ninja Lite", emoji:"🍉", genre:"aksiyon",
+    desc:"Meyveleri kes, bombalardan kaç! Hızlı refleksler şart.",
+    howto:"Mouse ile meyvelerin üzerinden geçerek kes. Kırmızı bombaları kesme! Combo kesileri bonus puan!",
+    badge:"hot", color:"#ff4500",
+    rating:4.6, plays:21345, scores:[],
+    comments:[{stars:5,text:"Refleks oyunlarının kraliçesi!"},{stars:5,text:"Çocuklar bayılıyor!"}]
+  },
+  {
+    id:18, name:"Sudoku Zen", emoji:"🔢", genre:"bulmaca",
+    desc:"Zihnini dinlendir, Sudoku çöz. Üç zorluk seviyesi ile sakin bir meydan okuma.",
+    howto:"Boş karelere tıkla ve 1-9 arası sayı gir. Her satır, sütun ve 3x3 kutuda her sayı bir kez!",
+    badge:"", color:"#00d4aa",
+    rating:4.5, plays:7890, scores:[],
+    comments:[{stars:5,text:"Meditasyon gibi, huzur veriyor."},{stars:4,text:"Sudoku severler için şart!"}]
+  },
+  {
+    id:19, name:"Asteroids Fury", emoji:"☄️", genre:"aksiyon",
+    desc:"Asteroit yağmurunda hayatta kal! Gemini döndür, ateş et, yok et.",
+    howto:"Sol/Sağ ok: döndür. Yukarı ok: ileri. Boşluk: ateş. Asteroitleri parçalara ayır, küçüklerini yok et!",
+    badge:"new", color:"#7b2fff",
+    rating:4.7, plays:17654, scores:[],
+    comments:[{stars:5,text:"Uzay shooter severlere bayram!"},{stars:5,text:"Grafikler inanılmaz güzel!"}]
+  },
+  {
+    id:20, name:"Piano Tiles", emoji:"🎹", genre:"spor",
+    desc:"Siyah tuşlara bas, müziği çal! Ritmi kaçırma, beyaz tuşa basma.",
+    howto:"Hızla geçen siyah karelere tıkla, beyaza basarsan biter! Hız giderek artar. Ne kadar süreceksin?",
+    badge:"new", color:"#ffd700",
+    rating:4.8, plays:25432, scores:[],
+    comments:[{stars:5,text:"Müzik ve refleks bir arada harika!"},{stars:5,text:"Duramıyorum oynamaktan!"}]
+  }
+];
+
+// ─── STATE ───
+let currentGame = null;
+let currentRating = 0;
+let activeFilter = 'tümü';
+let gameLoop = null;
+let liveScore = 0;
+
+// ─── PAGE SWITCH ───
+function showPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  event?.target?.classList.add('active');
+  if(p==='admin') renderAdmin();
+}
+
+// ─── RENDER GAMES ───
+function renderGames(list){
+  const grid = document.getElementById('gamesGrid');
+  grid.innerHTML = list.map((g,i)=>`
+    <div class="game-card" style="animation-delay:${i*0.04}s" onclick="openGame(${g.id})">
+      <div class="game-thumb" style="background:linear-gradient(135deg,${g.color}22,${g.color}44)">
+        <span style="font-size:3.5rem;position:relative;z-index:1">${g.emoji}</span>
+        ${g.badge?`<div class="game-badge ${g.badge}">${g.badge==='new'?'YENİ':g.badge==='hot'?'🔥 HOT':g.badge}</div>`:''}
+      </div>
+      <div class="game-info">
+        <div class="game-name">${g.name}</div>
+        <div class="game-genre">${g.genre}</div>
+        <div class="game-desc">${g.desc}</div>
+        <div class="game-meta">
+          <div>
+            <div class="stars">${'⭐'.repeat(Math.round(g.rating))} <span style="color:var(--text2);font-size:0.78rem">${g.rating}</span></div>
+            <div class="play-count">👥 ${g.plays.toLocaleString()} oynama</div>
+          </div>
+          <button class="play-btn" onclick="event.stopPropagation();openGame(${g.id})">▶ OYNA</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  updateStats();
+}
+
+function filterGames(q){
+  let list = GAMES.filter(g=>activeFilter==='tümü'||g.genre===activeFilter);
+  if(q) list = list.filter(g=>g.name.toLowerCase().includes(q.toLowerCase())||g.genre.includes(q.toLowerCase()));
+  renderGames(list);
+}
+
+function setFilter(f,btn){
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filterGames(document.querySelector('.search-bar input').value);
+}
+
+function updateStats(){
+  document.getElementById('stat-plays').textContent = GAMES.reduce((a,g)=>a+g.plays,0).toLocaleString();
+  document.getElementById('stat-comments').textContent = GAMES.reduce((a,g)=>a+g.comments.length,0);
+}
+
+// ─── OPEN GAME ───
+function openGame(id){
+  currentGame = GAMES.find(g=>g.id===id);
+  if(!currentGame) return;
+  currentGame.plays++;
+  liveScore = 0;
+  currentRating = 0;
+
+  document.getElementById('modalEmoji').textContent = currentGame.emoji;
+  document.getElementById('modalTitle').textContent = currentGame.name;
+  document.getElementById('howToPlay').textContent = currentGame.howto;
+  document.getElementById('liveScore').textContent = '0';
+  document.getElementById('commentBox').value = '';
+  document.querySelectorAll('.rating-star').forEach(s=>s.classList.remove('active'));
+  renderComments();
+  buildGame(currentGame);
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(e){
+  if(e && e.target!==document.getElementById('modalOverlay') && e.type==='click') return;
+  stopGame();
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+  renderGames(GAMES.filter(g=>activeFilter==='tümü'||g.genre===activeFilter));
+}
+
+// ─── RATING ───
+function setRating(n){
+  currentRating = n;
+  document.querySelectorAll('.rating-star').forEach((s,i)=>{
+    s.classList.toggle('active', i<n);
+  });
+}
+
+function submitRating(){
+  if(!currentGame || !currentRating) return alert('Lütfen yıldız seçin!');
+  const txt = document.getElementById('commentBox').value.trim();
+  currentGame.comments.unshift({stars:currentRating, text: txt||'Yorum yok.'});
+  // update rating avg
+  const all = currentGame.comments.map(c=>c.stars);
+  currentGame.rating = Math.round((all.reduce((a,b)=>a+b,0)/all.length)*10)/10;
+  document.getElementById('commentBox').value='';
+  currentRating=0;
+  document.querySelectorAll('.rating-star').forEach(s=>s.classList.remove('active'));
+  renderComments();
+}
+
+function renderComments(){
+  if(!currentGame) return;
+  document.getElementById('commentsList').innerHTML = currentGame.comments.slice(0,6).map(c=>`
+    <div class="comment-item">
+      <div class="comment-stars">${'⭐'.repeat(c.stars)}</div>
+      <div class="comment-text">${c.text}</div>
+    </div>
+  `).join('');
+}
+
+// ─── ADMIN ───
+function renderAdmin(){
+  // Stats
+  const totalPlays = GAMES.reduce((a,g)=>a+g.plays,0);
+  const avgRating = (GAMES.reduce((a,g)=>a+g.rating,0)/GAMES.length).toFixed(2);
+  const totalComments = GAMES.reduce((a,g)=>a+g.comments.length,0);
+  const topGame = GAMES.reduce((a,b)=>a.plays>b.plays?a:b);
+  document.getElementById('adminStatsRow').innerHTML = `
+    <div class="admin-stat-card"><div class="admin-stat-val">20</div><div class="admin-stat-lbl">Toplam Oyun</div></div>
+    <div class="admin-stat-card"><div class="admin-stat-val">${totalPlays.toLocaleString()}</div><div class="admin-stat-lbl">Toplam Oynama</div></div>
+    <div class="admin-stat-card"><div class="admin-stat-val">${avgRating}</div><div class="admin-stat-lbl">Ortalama Puan</div></div>
+    <div class="admin-stat-card"><div class="admin-stat-val">${totalComments}</div><div class="admin-stat-lbl">Toplam Yorum</div></div>
+    <div class="admin-stat-card"><div class="admin-stat-val">${topGame.emoji}</div><div class="admin-stat-lbl">En Popüler: ${topGame.name}</div></div>
+  `;
+  document.getElementById('lastUpdate').textContent = 'Son güncelleme: '+new Date().toLocaleTimeString('tr-TR');
+
+  // Table
+  const sorted = [...GAMES].sort((a,b)=>b.plays-a.plays);
+  document.getElementById('adminTbody').innerHTML = sorted.map((g,i)=>`
+    <tr>
+      <td style="color:var(--text2)">${i+1}</td>
+      <td><div class="td-game"><div class="td-icon">${g.emoji}</div><div><div class="td-name">${g.name}</div></div></div></td>
+      <td><span class="badge-genre">${g.genre}</span></td>
+      <td style="font-family:'Orbitron',monospace;color:var(--gold)">${g.rating} / 5.0</td>
+      <td>
+        <div class="rating-bar">
+          <div class="bar-track"><div class="bar-fill" style="width:${g.rating/5*100}%"></div></div>
+          <span style="color:var(--text2);font-size:0.75rem;min-width:30px">${g.rating}</span>
+        </div>
+      </td>
+      <td style="color:var(--accent)">${g.plays.toLocaleString()}</td>
+      <td style="color:var(--text2)">${g.comments.length}</td>
+      <td><span style="color:${g.badge==='hot'?'#ff4500':g.badge==='new'?'var(--accent)':'var(--text2)'}">${g.badge==='hot'?'🔥 HOT':g.badge==='new'?'✨ YENİ':'✅ Aktif'}</span></td>
+    </tr>
+  `).join('');
+
+  // JSON view
+  const ds = GAMES.map(g=>({id:g.id,name:g.name,emoji:g.emoji,genre:g.genre,description:g.desc,howToPlay:g.howto,rating:g.rating,totalPlays:g.plays,commentCount:g.comments.length,badge:g.badge||null,comments:g.comments}));
+  document.getElementById('jsonView').textContent = JSON.stringify(ds, null, 2);
+}
+
+function exportJSON(){
+  const ds = GAMES.map(g=>({id:g.id,name:g.name,emoji:g.emoji,genre:g.genre,description:g.desc,howToPlay:g.howto,rating:g.rating,totalPlays:g.plays,commentCount:g.comments.length,badge:g.badge||null,comments:g.comments}));
+  const blob = new Blob([JSON.stringify(ds,null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='nexus_games_dataset.json'; a.click();
+}
+
+// ════════════════════════════════════════════════════════
+// GAME ENGINES
+// ════════════════════════════════════════════════════════
+function stopGame(){
+  if(gameLoop){clearInterval(gameLoop);clearTimeout(gameLoop);gameLoop=null;}
+  document.onkeydown=null; document.onkeyup=null;
+}
+
+function setScore(n){ liveScore=n; document.getElementById('liveScore').textContent=n; }
+
+function buildGame(g){
+  stopGame();
+  const ui = document.getElementById('gameUI');
+  ui.innerHTML='';
+  const engines = {
+    1: buildSnake, 2: buildPong, 3: buildSpaceInvaders, 4: buildMemory,
+    5: buildTetris, 6: buildDino, 7: build2048, 8: buildCrossword,
+    9: buildFlappy, 10: buildMinesweeper, 11: buildRacing, 12: buildBasketball,
+    13: buildWordScramble, 14: buildTowerDefense, 15: buildBrickBreaker,
+    16: buildTicTacToe, 17: buildFruitNinja, 18: buildSudoku,
+    19: buildAsteroids, 20: buildPianoTiles
+  };
+  if(engines[g.id]) engines[g.id](ui);
+}
+
+// ─── 1. SNAKE ───
+function buildSnake(ui){
+  const c=document.createElement('canvas'); c.width=360; c.height=360; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  const btns=mkBtns(['▶ Başlat','↺ Yeniden'],[()=>startSnake(c,msg),()=>startSnake(c,msg)]); ui.appendChild(btns);
+  startSnake(c,msg);
+}
+function startSnake(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d'), sz=20, W=c.width/sz, H=c.height/sz;
+  let snake=[{x:10,y:10}], dir={x:1,y:0}, food=rndFood(W,H,snake), score=0, alive=true;
+  function rndFood(w,h,s){let f;do{f={x:Math.floor(Math.random()*w),y:Math.floor(Math.random()*h)}}while(s.some(p=>p.x===f.x&&p.y===f.y));return f;}
+  document.onkeydown=e=>{
+    const k=e.key;
+    if(k==='ArrowLeft'&&dir.x!==1)dir={x:-1,y:0};
+    else if(k==='ArrowRight'&&dir.x!==-1)dir={x:1,y:0};
+    else if(k==='ArrowUp'&&dir.y!==1)dir={x:0,y:-1};
+    else if(k==='ArrowDown'&&dir.y!==-1)dir={x:0,y:1};
+    else if(k==='a'&&dir.x!==1)dir={x:-1,y:0};
+    else if(k==='d'&&dir.x!==-1)dir={x:1,y:0};
+    else if(k==='w'&&dir.y!==1)dir={x:0,y:-1};
+    else if(k==='s'&&dir.y!==-1)dir={x:0,y:1};
+    e.preventDefault();
+  };
+  gameLoop=setInterval(()=>{
+    if(!alive) return;
+    const head={x:(snake[0].x+dir.x+W)%W, y:(snake[0].y+dir.y+H)%H};
+    if(snake.some(p=>p.x===head.x&&p.y===head.y)){alive=false;msg.textContent='💀 Oyun Bitti! Skor: '+score;return;}
+    snake.unshift(head);
+    if(head.x===food.x&&head.y===food.y){score+=10;setScore(score);food=rndFood(W,H,snake);}
+    else snake.pop();
+    ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle='rgba(0,245,255,0.05)';
+    for(let x=0;x<W;x++)for(let y=0;y<H;y++)if((x+y)%2===0)ctx.fillRect(x*sz,y*sz,sz,sz);
+    ctx.fillStyle='#ff006e'; ctx.shadowColor='#ff006e'; ctx.shadowBlur=10;
+    ctx.beginPath(); ctx.arc(food.x*sz+sz/2,food.y*sz+sz/2,sz/2-2,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+    snake.forEach((p,i)=>{
+      ctx.fillStyle=i===0?'#00f5ff':'#00a0b0';
+      ctx.shadowColor='#00f5ff'; ctx.shadowBlur=i===0?15:0;
+      ctx.fillRect(p.x*sz+1,p.y*sz+1,sz-2,sz-2);
+    });
+    ctx.shadowBlur=0;
+    msg.textContent='🐍 Skor: '+score;
+  },130);
+}
+
+// ─── 2. PONG ───
+function buildPong(ui){
+  const c=document.createElement('canvas'); c.width=400; c.height=300; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  const btns=mkBtns(['▶ Başlat'],[()=>startPong(c,msg)]); ui.appendChild(btns);
+  startPong(c,msg);
+}
+function startPong(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d'), PH=60, PW=10, speed=4;
+  let p1={y:120,score:0}, p2={y:120,score:0};
+  let ball={x:200,y:150,vx:speed*(Math.random()>0.5?1:-1),vy:speed*(Math.random()>0.5?1:-1)};
+  let keys={};
+  document.onkeydown=e=>{keys[e.key]=true;e.preventDefault();};
+  document.onkeyup=e=>{keys[e.key]=false;};
+  gameLoop=setInterval(()=>{
+    if(keys['w'])p1.y=Math.max(0,p1.y-5);
+    if(keys['s'])p1.y=Math.min(c.height-PH,p1.y+5);
+    if(keys['ArrowUp'])p2.y=Math.max(0,p2.y-5);
+    if(keys['ArrowDown'])p2.y=Math.min(c.height-PH,p2.y+5);
+    ball.x+=ball.vx; ball.y+=ball.vy;
+    if(ball.y<=5||ball.y>=c.height-5) ball.vy*=-1;
+    if(ball.x<=PW+10&&ball.y>=p1.y&&ball.y<=p1.y+PH){ball.vx=Math.abs(ball.vx)+0.2;ball.vy+=(Math.random()-0.5)*2;}
+    if(ball.x>=c.width-PW-10&&ball.y>=p2.y&&ball.y<=p2.y+PH){ball.vx=-(Math.abs(ball.vx)+0.2);ball.vy+=(Math.random()-0.5)*2;}
+    if(ball.x<0){p2.score++;ball={x:200,y:150,vx:speed,vy:speed*(Math.random()>0.5?1:-1)};}
+    if(ball.x>c.width){p1.score++;ball={x:200,y:150,vx:-speed,vy:speed*(Math.random()>0.5?1:-1)};}
+    setScore(p1.score*10+p2.score*5);
+    ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+    ctx.setLineDash([8,8]); ctx.strokeStyle='#1a2a4a'; ctx.beginPath(); ctx.moveTo(c.width/2,0); ctx.lineTo(c.width/2,c.height); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#00f5ff'; ctx.shadowColor='#00f5ff'; ctx.shadowBlur=10;
+    ctx.fillRect(PW,p1.y,PW,PH);
+    ctx.fillStyle='#ff006e'; ctx.shadowColor='#ff006e';
+    ctx.fillRect(c.width-PW*2,p2.y,PW,PH);
+    ctx.fillStyle='white'; ctx.shadowColor='white'; ctx.shadowBlur=15;
+    ctx.beginPath(); ctx.arc(ball.x,ball.y,7,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.fillStyle='white'; ctx.font='bold 24px Orbitron,monospace'; ctx.textAlign='center';
+    ctx.fillText(p1.score,c.width/4,30);
+    ctx.fillText(p2.score,3*c.width/4,30);
+    msg.textContent='🏓 W/S vs ↑/↓ | Sol: '+p1.score+' — Sağ: '+p2.score;
+  },16);
+}
+
+// ─── 3. SPACE INVADERS ───
+function buildSpaceInvaders(ui){
+  const c=document.createElement('canvas'); c.width=400; c.height=360; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  const btns=mkBtns(['▶ Başlat'],[()=>startSI(c,msg)]); ui.appendChild(btns);
+  startSI(c,msg);
+}
+function startSI(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  let ship={x:200,y:330,w:30,h:15};
+  let bullets=[], invBullets=[], wave=1;
+  let invaders=mkInvaders();
+  let invDir=1, invSpeed=30, invTimer=0, alive=true;
+  let score=0;
+  function mkInvaders(){
+    let arr=[];
+    for(let r=0;r<3;r++)for(let col=0;col<8;col++)
+      arr.push({x:50+col*42,y:40+r*35,alive:true,emoji:['👾','👽','🤖'][r]});
+    return arr;
+  }
+  let keys={};
+  document.onkeydown=e=>{
+    keys[e.key]=true;
+    if(e.key===' '){bullets.push({x:ship.x,y:ship.y-10,vy:-7});}
+    e.preventDefault();
+  };
+  document.onkeyup=e=>keys[e.key]=false;
+  gameLoop=setInterval(()=>{
+    if(!alive)return;
+    if(keys['ArrowLeft'])ship.x=Math.max(20,ship.x-5);
+    if(keys['ArrowRight'])ship.x=Math.min(c.width-20,ship.x+5);
+    bullets=bullets.filter(b=>{b.y+=b.vy;return b.y>0;});
+    invBullets=invBullets.filter(b=>{b.y+=b.vy;
+      if(b.y>c.height)return false;
+      if(Math.abs(b.x-ship.x)<15&&Math.abs(b.y-ship.y)<10){alive=false;msg.textContent='💀 Oyun Bitti! Skor:'+score;}
+      return true;
+    });
+    bullets.forEach(b=>{
+      invaders.forEach(inv=>{if(inv.alive&&Math.abs(b.x-inv.x)<15&&Math.abs(b.y-inv.y)<12){inv.alive=false;b.y=-100;score+=10*(wave);setScore(score);}});
+    });
+    invTimer++;
+    if(invTimer>invSpeed){
+      invTimer=0;
+      const alive_inv=invaders.filter(i=>i.alive);
+      if(alive_inv.length===0){wave++;invaders=mkInvaders();invSpeed=Math.max(10,invSpeed-5);}
+      const maxX=Math.max(...alive_inv.map(i=>i.x));
+      const minX=Math.min(...alive_inv.map(i=>i.x));
+      if(maxX>c.width-30||minX<30){invDir*=-1;invaders.forEach(i=>i.y+=15);}
+      invaders.forEach(i=>i.x+=invDir*20);
+      if(alive_inv.length>0&&Math.random()<0.15){
+        const shooter=alive_inv[Math.floor(Math.random()*alive_inv.length)];
+        invBullets.push({x:shooter.x,y:shooter.y+10,vy:3});
+      }
+    }
+    ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+    invaders.filter(i=>i.alive).forEach(i=>{
+      ctx.font='20px serif'; ctx.textAlign='center'; ctx.fillText(i.emoji,i.x,i.y+8);
+    });
+    bullets.forEach(b=>{ctx.fillStyle='#00f5ff';ctx.shadowColor='#00f5ff';ctx.shadowBlur=8;ctx.fillRect(b.x-2,b.y,4,12);ctx.shadowBlur=0;});
+    invBullets.forEach(b=>{ctx.fillStyle='#ff006e';ctx.shadowColor='#ff006e';ctx.shadowBlur=8;ctx.fillRect(b.x-2,b.y,4,12);ctx.shadowBlur=0;});
+    ctx.fillStyle='#00f5ff'; ctx.shadowColor='#00f5ff'; ctx.shadowBlur=15;
+    ctx.beginPath(); ctx.moveTo(ship.x,ship.y-ship.h); ctx.lineTo(ship.x-ship.w,ship.y+ship.h); ctx.lineTo(ship.x+ship.w,ship.y+ship.h); ctx.closePath(); ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.fillStyle='white'; ctx.font='14px Orbitron,monospace'; ctx.textAlign='left'; ctx.fillText('Dalga: '+wave,10,20);
+    msg.textContent='👾 Skor: '+score+' | Sol/Sağ: hareket | Boşluk: ateş';
+  },16);
+}
+
+// ─── 4. MEMORY ───
+function buildMemory(ui){
+  const emojis=['🍕','🎮','🚀','🌟','🎯','🏆','💎','🔥'];
+  let cards=[...emojis,...emojis].sort(()=>Math.random()-0.5).map((e,i)=>({id:i,emoji:e,flipped:false,matched:false}));
+  let first=null, lock=false, moves=0; setScore(0);
+  const grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;';
+  function render(){
+    grid.innerHTML=cards.map(c=>`
+      <div onclick="memClick(${c.id})" style="
+        width:70px;height:70px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+        font-size:1.8rem;cursor:pointer;transition:all 0.3s;
+        background:${c.matched?'#0a2a0a':c.flipped?'#0a1a2a':'#0c1525'};
+        border:1px solid ${c.matched?'#00ff44':c.flipped?'#00f5ff':'#1a2a4a'};
+        box-shadow:${c.flipped||c.matched?'0 0 15px rgba(0,245,255,0.3)':'none'};
+      ">${c.flipped||c.matched?c.emoji:'❓'}</div>
+    `).join('');
+  }
+  window.memClick=function(id){
+    if(lock)return;
+    const card=cards[id];
+    if(card.flipped||card.matched)return;
+    card.flipped=true; render();
+    if(!first){first=card;}
+    else{
+      moves++;
+      if(first.emoji===card.emoji){first.matched=card.matched=true;first=null;setScore(Math.max(0,100-moves*2));}
+      else{lock=true;setTimeout(()=>{first.flipped=card.flipped=false;first=null;lock=false;render();},900);}
+    }
+    if(cards.every(c=>c.matched)){document.getElementById('liveScore').style.color='#ffd700';}
+  };
+  ui.appendChild(grid); render();
+  const msg=mkMsg(); msg.textContent='🧠 Kartları eşleştir!'; ui.appendChild(msg);
+}
+
+// ─── 5. TETRIS ───
+function buildTetris(ui){
+  const c=document.createElement('canvas'); c.width=240; c.height=400; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  const btns=mkBtns(['▶ Başlat'],[()=>startTetris(c,msg)]); ui.appendChild(btns);
+  startTetris(c,msg);
+}
+function startTetris(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d'), SZ=24, COLS=10, ROWS=Math.floor(c.height/SZ);
+  const PIECES=[
+    [[1,1,1,1]],[[1,1],[1,1]],[[0,1,0],[1,1,1]],
+    [[1,0],[1,0],[1,1]],[[0,1],[0,1],[1,1]],
+    [[0,1,1],[1,1,0]],[[1,1,0],[0,1,1]]
+  ];
+  const COLORS=['#00f5ff','#ffd700','#7b2fff','#ff4500','#00d4aa','#ff006e','#ff8c00'];
+  let board=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+  let piece,px,py,ci,score=0,alive=true;
+  function newPiece(){
+    ci=Math.floor(Math.random()*PIECES.length);
+    piece=PIECES[ci]; px=Math.floor(COLS/2-piece[0].length/2); py=0;
+    if(collide())alive=false;
+  }
+  function collide(ox=0,oy=0,p=piece){
+    return p.some((r,ri)=>r.some((v,c2)=>v&&(board[ri+py+oy]===undefined||board[ri+py+oy][c2+px+ox]===undefined||board[ri+py+oy][c2+px+ox])));
+  }
+  function merge(){piece.forEach((r,ri)=>r.forEach((v,ci2)=>{if(v)board[ri+py][ci2+px]=ci+1;}));}
+  function clearLines(){
+    let cleared=0;
+    board=board.filter(r=>{if(r.every(v=>v)){cleared++;return false;}return true;});
+    while(board.length<ROWS)board.unshift(Array(COLS).fill(0));
+    if(cleared){score+=cleared*100;setScore(score);}
+  }
+  function rotate(p){return p[0].map((_,i)=>p.map(r=>r[i]).reverse());}
+  newPiece();
+  document.onkeydown=e=>{
+    if(!alive)return;
+    if(e.key==='ArrowLeft'&&!collide(-1))px--;
+    else if(e.key==='ArrowRight'&&!collide(1))px++;
+    else if(e.key==='ArrowDown'){if(!collide(0,1))py++;else{merge();clearLines();newPiece();}}
+    else if(e.key==='ArrowUp'){const r=rotate(piece);if(!collide(0,0,r))piece=r;}
+    e.preventDefault();
+  };
+  gameLoop=setInterval(()=>{
+    if(!alive){msg.textContent='💀 Oyun Bitti! Skor: '+score;return;}
+    if(!collide(0,1))py++;
+    else{merge();clearLines();newPiece();}
+    ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+    board.forEach((r,ri)=>r.forEach((v,ci2)=>{
+      if(v){ctx.fillStyle=COLORS[v-1];ctx.shadowColor=COLORS[v-1];ctx.shadowBlur=5;ctx.fillRect(ci2*SZ+1,ri*SZ+1,SZ-2,SZ-2);ctx.shadowBlur=0;}
+    }));
+    piece.forEach((r,ri)=>r.forEach((v,ci2)=>{
+      if(v){ctx.fillStyle=COLORS[ci];ctx.shadowColor=COLORS[ci];ctx.shadowBlur=10;ctx.fillRect((ci2+px)*SZ+1,(ri+py)*SZ+1,SZ-2,SZ-2);ctx.shadowBlur=0;}
+    }));
+    msg.textContent='🟦 ←→: hareket | ↑: döndür | ↓: hızlı düş';
+  },500);
+}
+
+// ─── 6. DINO RUNNER ───
+function buildDino(ui){
+  const c=document.createElement('canvas'); c.width=400; c.height=200; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  const btns=mkBtns(['▶ Başlat'],[()=>startDino(c,msg)]); ui.appendChild(btns);
+  startDino(c,msg);
+}
+function startDino(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  let dino={x:60,y:140,w:30,h:40,vy:0,onGround:true};
+  let obstacles=[],score=0,speed=4,alive=true,frame=0;
+  const GROUND=160;
+  function jump(){if(dino.onGround){dino.vy=-14;dino.onGround=false;}}
+  document.onkeydown=e=>{if(e.key===' '||e.key==='ArrowUp'){jump();e.preventDefault();}};
+  c.onclick=jump;
+  gameLoop=setInterval(()=>{
+    if(!alive)return;
+    frame++; score++;
+    if(score%60===0){speed=Math.min(10,speed+0.3);setScore(Math.floor(score/6));}
+    dino.vy+=0.9; dino.y+=dino.vy;
+    if(dino.y>=GROUND){dino.y=GROUND;dino.vy=0;dino.onGround=true;}
+    if(Math.random()<0.018)obstacles.push({x:c.width,y:GROUND+10,w:20,h:35+(Math.random()*20|0)});
+    obstacles=obstacles.filter(o=>{o.x-=speed;return o.x>-30;});
+    for(const o of obstacles){
+      if(dino.x+dino.w-5>o.x&&dino.x<o.x+o.w&&dino.y+dino.h>o.y){alive=false;msg.textContent='💀 Bitti! Skor: '+Math.floor(score/6);break;}
+    }
+    ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+    ctx.strokeStyle='#1a2a4a'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,GROUND+dino.h+2); ctx.lineTo(c.width,GROUND+dino.h+2); ctx.stroke();
+    ctx.font='32px serif'; ctx.textAlign='center'; ctx.fillText('🦖',dino.x+dino.w/2,dino.y+dino.h);
+    obstacles.forEach(o=>{ctx.fillStyle='#ff4500';ctx.shadowColor='#ff4500';ctx.shadowBlur=8;ctx.fillRect(o.x,o.y-o.h,o.w,o.h);ctx.shadowBlur=0;});
+    ctx.fillStyle='white'; ctx.font='14px Orbitron,monospace'; ctx.textAlign='left'; ctx.fillText('SKOR: '+Math.floor(score/6),10,20);
+    msg.textContent='🦖 Boşluk veya tıkla = zıpla';
+  },16);
+}
+
+// ─── 7. 2048 ───
+function build2048(ui){
+  let board=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], score=0;
+  function addRnd(){
+    const empty=[];
+    board.forEach((r,ri)=>r.forEach((v,ci)=>{if(!v)empty.push([ri,ci]);}));
+    if(!empty.length)return;
+    const [r,c2]=empty[Math.floor(Math.random()*empty.length)];
+    board[r][c2]=Math.random()<0.9?2:4;
+  }
+  addRnd(); addRnd();
+  const COLORS={0:'#0c1525',2:'#1a3a4a',4:'#0a3a6a',8:'#00a0b0',16:'#00d4aa',32:'#ffd700',64:'#ff8c00',128:'#ff4500',256:'#ff006e',512:'#7b2fff',1024:'#ff006e',2048:'#00f5ff'};
+  const div=document.createElement('div');
+  div.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px;background:#0a1020;border-radius:10px;';
+  function render(){
+    div.innerHTML=board.flat().map(v=>`
+      <div style="width:70px;height:70px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+        background:${COLORS[v]||'#ff006e'};font-family:Orbitron,monospace;font-weight:700;font-size:${v>=1000?'0.8rem':'1.1rem'};
+        color:${v>4?'white':'#8899bb'};border:1px solid rgba(255,255,255,0.1);">${v||''}</div>
+    `).join('');
+    setScore(score);
+  }
+  function slide(row){
+    let r=row.filter(v=>v);
+    for(let i=0;i<r.length-1;i++){if(r[i]===r[i+1]){r[i]*=2;score+=r[i];r.splice(i+1,1);}}
+    while(r.length<4)r.push(0);
+    return r;
+  }
+  function move(d){
+    let moved=false;
+    if(d==='left'||d==='right'){
+      board=board.map(row=>{const s=d==='right'?slide([...row].reverse()).reverse():slide(row);if(s.join()!==row.join())moved=true;return s;});
+    } else {
+      for(let c2=0;c2<4;c2++){
+        let col=board.map(r=>r[c2]);
+        const s=d==='down'?slide([...col].reverse()).reverse():slide(col);
+        if(s.join()!==col.join())moved=true;
+        board.forEach((r,ri)=>r[c2]=s[ri]);
+      }
+    }
+    if(moved){addRnd();render();}
+  }
+  document.onkeydown=e=>{
+    const map={'ArrowLeft':'left','ArrowRight':'right','ArrowUp':'up','ArrowDown':'down'};
+    if(map[e.key]){move(map[e.key]);e.preventDefault();}
+  };
+  ui.appendChild(div); render();
+  const msg=mkMsg(); msg.textContent='🌌 Ok tuşlarıyla kaydır, 2048\'e ulaş!'; ui.appendChild(msg);
+}
+
+// ─── 8. CROSSWORD (basit) ───
+function buildCrossword(ui){
+  const words=[{word:'NEXUS',clue:'Bağlantı merkezi',dir:'h',r:0,c:0},{word:'OYUN',clue:'Eğlenceli aktivite',dir:'v',r:0,c:2},{word:'NEON',clue:'Parlak ışık gazı',dir:'h',r:2,c:1},{word:'UYU',clue:'Geceleri yapılan şey',dir:'v',r:2,c:3}];
+  const GRID=5;
+  let grid=Array.from({length:GRID},()=>Array(GRID).fill({letter:'',block:true}));
+  words.forEach(w=>{
+    for(let i=0;i<w.word.length;i++){
+      const r=w.dir==='h'?w.r:w.r+i, c=w.dir==='h'?w.c+i:w.c;
+      if(r<GRID&&c<GRID) grid[r][c]={letter:'',answer:w.word[i],block:false};
+    }
+  });
+  let selected=null, inputs={};
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px;';
+  const gridDiv=document.createElement('div');
+  gridDiv.style.cssText=`display:grid;grid-template-columns:repeat(${GRID},1fr);gap:3px;`;
+  grid.forEach((row,ri)=>row.forEach((cell,ci)=>{
+    const d=document.createElement('div');
+    d.style.cssText=`width:45px;height:45px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+      background:${cell.block?'transparent':'#0c1525'};border:${cell.block?'none':'1px solid #1a2a4a'};`;
+    if(!cell.block){
+      const inp=document.createElement('input');
+      inp.maxLength=1; inp.style.cssText='width:100%;height:100%;background:none;border:none;color:#00f5ff;text-align:center;font-size:1.2rem;font-weight:700;outline:none;font-family:Orbitron,monospace;text-transform:uppercase;';
+      inp.oninput=function(){
+        this.value=this.value.toUpperCase();
+        grid[ri][ci].letter=this.value;
+        let correct=0,total=0;
+        grid.forEach(r2=>r2.forEach(c2=>{if(!c2.block&&c2.answer){total++;if(c2.letter===c2.answer)correct++;}}));
+        setScore(Math.round(correct/total*100));
+        msg.textContent=correct===total?'🎉 Tebrikler! Tümünü buldun!':'📝 İlerleme: '+correct+'/'+total;
+      };
+      inputs[`${ri}-${ci}`]=inp; d.appendChild(inp);
+    }
+    gridDiv.appendChild(d);
+  }));
+  const clueDiv=document.createElement('div');
+  clueDiv.style.cssText='color:#8899bb;font-size:0.8rem;max-width:300px;text-align:left;';
+  clueDiv.innerHTML='<b style="color:#00f5ff">İpuçları:</b><br>'+words.map(w=>`${w.dir==='h'?'→':'↓'} (${w.r},${w.c}): ${w.clue}`).join('<br>');
+  wrapper.appendChild(gridDiv); wrapper.appendChild(clueDiv); ui.appendChild(wrapper);
+  const msg=mkMsg(); msg.textContent='📝 Harfleri gir ve kelimeleri bul!'; ui.appendChild(msg);
+}
+
+// ─── 9. FLAPPY ───
+function buildFlappy(ui){
+  const c=document.createElement('canvas'); c.width=360; c.height=400; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  const btns=mkBtns(['▶ Başlat'],[()=>startFlappy(c,msg)]); ui.appendChild(btns);
+  startFlappy(c,msg);
+}
+function startFlappy(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  let bird={x:80,y:200,vy:0}, pipes=[], score=0, alive=true, started=false;
+  function flap(){if(!started)started=true; bird.vy=-7;}
+  document.onkeydown=e=>{if(e.key===' '){flap();e.preventDefault();}};
+  c.onclick=flap;
+  gameLoop=setInterval(()=>{
+    if(!alive)return;
+    if(!started){
+      ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+      ctx.fillStyle='white'; ctx.font='bold 1rem Orbitron,monospace'; ctx.textAlign='center';
+      ctx.fillText('Tıkla veya Boşluk = Uç!',c.width/2,c.height/2);
+      return;
+    }
+    bird.vy+=0.5; bird.y+=bird.vy;
+    if(bird.y<0||bird.y>c.height){alive=false;msg.textContent='💀 Çarptın! Skor: '+score;return;}
+    if(pipes.length===0||pipes[pipes.length-1].x<c.width-140)
+      pipes.push({x:c.width,gap:Math.floor(Math.random()*(c.height-200))+60,w:50});
+    pipes=pipes.filter(p=>{
+      p.x-=3;
+      if(p.x+p.w<bird.x&&!p.passed){p.passed=true;score++;setScore(score);}
+      if(bird.x+15>p.x&&bird.x-15<p.x+p.w&&(bird.y-15<p.gap||bird.y+15>p.gap+140)){alive=false;msg.textContent='💀 Çarptın! Skor: '+score;}
+      return p.x>-60;
+    });
+    ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+    pipes.forEach(p=>{
+      const grad=ctx.createLinearGradient(p.x,0,p.x+p.w,0);
+      grad.addColorStop(0,'#1a3a1a'); grad.addColorStop(1,'#0a2a0a');
+      ctx.fillStyle=grad; ctx.shadowColor='#00ff44'; ctx.shadowBlur=5;
+      ctx.fillRect(p.x,0,p.w,p.gap);
+      ctx.fillRect(p.x,p.gap+140,p.w,c.height);
+      ctx.shadowBlur=0;
+    });
+    ctx.font='26px serif'; ctx.textAlign='center'; ctx.fillText('🐦',bird.x,bird.y+8);
+    ctx.fillStyle='white'; ctx.font='bold 18px Orbitron,monospace'; ctx.fillText(score,c.width/2,30);
+    msg.textContent='🐦 Tıkla veya Boşluk = Uç! Skor: '+score;
+  },16);
+}
+
+// ─── 10. MINESWEEPER ───
+function buildMinesweeper(ui){
+  const ROWS=9,COLS=9,MINES=10;
+  let board=[], revealed=[], flagged=[], firstClick=true, alive=true, startTime=null;
+  function init(){
+    board=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+    revealed=Array.from({length:ROWS},()=>Array(COLS).fill(false));
+    flagged=Array.from({length:ROWS},()=>Array(COLS).fill(false));
+    firstClick=true; alive=true; setScore(0); startTime=null;
+  }
+  function placeMines(er,ec){
+    let placed=0;
+    while(placed<MINES){
+      const r=Math.floor(Math.random()*ROWS),c2=Math.floor(Math.random()*COLS);
+      if(board[r][c2]!==-1&&!(Math.abs(r-er)<=1&&Math.abs(c2-ec)<=1)){board[r][c2]=-1;placed++;}
+    }
+    for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++){
+      if(board[r][c2]!==-1){let cnt=0;for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){const nr=r+dr,nc=c2+dc;if(nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&board[nr][nc]===-1)cnt++;}board[r][c2]=cnt;}
+    }
+  }
+  function reveal(r,c2){
+    if(r<0||r>=ROWS||c2<0||c2>=COLS||revealed[r][c2]||flagged[r][c2])return;
+    revealed[r][c2]=true;
+    if(board[r][c2]===0)for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++)reveal(r+dr,c2+dc);
+  }
+  init();
+  const numColors=['','#00f5ff','#00d4aa','#ff4500','#7b2fff','#ff006e','#ffd700','#ff8c00','#ff006e'];
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='display:flex;flex-direction:column;align-items:center;gap:8px;padding:5px;';
+  const grid=document.createElement('div');
+  grid.style.cssText=`display:grid;grid-template-columns:repeat(${COLS},1fr);gap:2px;`;
+  function render(){
+    grid.innerHTML='';
+    for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++){
+      const cell=document.createElement('div');
+      const rev=revealed[r][c2], flag=flagged[r][c2], val=board[r][c2];
+      cell.style.cssText=`width:34px;height:34px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+        font-size:0.85rem;font-weight:700;cursor:pointer;user-select:none;
+        background:${rev?(val===-1?'#3a0a0a':'#0a1a2a'):'#0c1525'};
+        border:1px solid ${rev?'#0a2a4a':'#1a3a5a'};
+        color:${val>0?numColors[val]:'white'};`;
+      cell.textContent=rev?(val===-1?'💣':val||''):(flag?'🚩':'');
+      cell.onclick=()=>{
+        if(!alive||flag)return;
+        if(firstClick){firstClick=false;placeMines(r,c2);startTime=Date.now();}
+        if(val===-1){reveal(r,c2);alive=false;
+          for(let rr=0;rr<ROWS;rr++)for(let cc=0;cc<COLS;cc++)if(board[rr][cc]===-1)revealed[rr][cc]=true;
+          render(); msg.textContent='💥 Mayına bastın!'; return;
+        }
+        reveal(r,c2); render();
+        const safe=ROWS*COLS-MINES, rev2=revealed.flat().filter(Boolean).length;
+        if(rev2>=safe){setScore(Math.max(0,500-Math.floor((Date.now()-startTime)/100)));msg.textContent='🏆 Tebrikler! Kazandın!';}
+      };
+      cell.oncontextmenu=e=>{e.preventDefault();if(!alive||rev)return;flagged[r][c2]=!flagged[r][c2];render();};
+      grid.appendChild(cell);
+    }
+  }
+  render();
+  const msg=mkMsg(); msg.textContent='💣 Sol: aç | Sağ: bayrak | İpucu: köşeden başla!'; ui.appendChild(wrapper);
+  wrapper.appendChild(grid); wrapper.appendChild(msg);
+  const btns=mkBtns(['↺ Yeni Oyun'],[()=>{init();render();msg.textContent='💣 Yeni oyun!'}]); wrapper.appendChild(btns);
+}
+
+// ─── 11. RACING ───
+function buildRacing(ui){
+  const c=document.createElement('canvas'); c.width=300; c.height=400; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  startRacing(c,msg);
+}
+function startRacing(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  let car={x:150,lane:1}, lanes=[75,150,225], obstacles=[],score=0,alive=true,speed=3,frame=0,roadY=0;
+  let keys={};
+  document.onkeydown=e=>{keys[e.key]=true;e.preventDefault();};
+  document.onkeyup=e=>keys[e.key]=false;
+  const carEmoji='🏎️'; const obsEmojis=['🚗','🚕','🚙','🚌'];
+  gameLoop=setInterval(()=>{
+    if(!alive)return;
+    frame++; score++; if(frame%120===0){speed=Math.min(12,speed+0.5);setScore(Math.floor(score/10));}
+    roadY=(roadY+speed)%80;
+    if(keys['ArrowLeft']&&car.lane>0)car.lane--;
+    if(keys['ArrowRight']&&car.lane<2)car.lane++;
+    car.x+=(lanes[car.lane]-car.x)*0.2;
+    if(Math.random()<0.025)obstacles.push({x:lanes[Math.floor(Math.random()*3)],y:-40,emoji:obsEmojis[Math.floor(Math.random()*obsEmojis.length)]});
+    obstacles=obstacles.filter(o=>{o.y+=speed;
+      if(Math.abs(o.x-car.x)<25&&o.y>340&&o.y<400){alive=false;msg.textContent='💥 Çarptın! Skor:'+Math.floor(score/10);}
+      return o.y<420;
+    });
+    ctx.fillStyle='#1a1a2a'; ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle='#2a1a0a'; ctx.fillRect(0,0,75,c.height); ctx.fillRect(225,0,75,c.height);
+    ctx.fillStyle='#1a2a1a'; ctx.fillRect(75,0,150,c.height);
+    ctx.strokeStyle='#ffd700'; ctx.lineWidth=3; ctx.setLineDash([40,40]); ctx.lineDashOffset=-roadY;
+    ctx.beginPath(); ctx.moveTo(113,0); ctx.lineTo(113,c.height); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(188,0); ctx.lineTo(188,c.height); ctx.stroke();
+    ctx.setLineDash([]);
+    obstacles.forEach(o=>{ctx.font='28px serif';ctx.textAlign='center';ctx.fillText(o.emoji,o.x,o.y);});
+    ctx.font='32px serif'; ctx.textAlign='center'; ctx.fillText(carEmoji,car.x,370);
+    ctx.fillStyle='white'; ctx.font='14px Orbitron,monospace'; ctx.textAlign='left'; ctx.fillText('SKOR: '+Math.floor(score/10),10,20);
+    msg.textContent='🏎️ ← → ile şerit değiştir';
+  },16);
+}
+
+// ─── 12. BASKETBALL ───
+function buildBasketball(ui){
+  const c=document.createElement('canvas'); c.width=360; c.height=360; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  startBasketball(c,msg);
+}
+function startBasketball(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  let ball=null, score=0, shots=0, hoop={x:260,y:120,w:60};
+  let dragStart=null;
+  c.onmousedown=e=>{const r=c.getBoundingClientRect();dragStart={x:e.clientX-r.left,y:e.clientY-r.top};};
+  c.onmouseup=e=>{
+    if(!dragStart||ball)return;
+    const r=c.getBoundingClientRect();
+    const ex=e.clientX-r.left, ey=e.clientY-r.top;
+    const vx=(ex-dragStart.x)*0.08, vy=(ey-dragStart.y)*0.08;
+    ball={x:80,y:290,vx:-vx,vy:-vy+0.5,r:15};
+    shots++; dragStart=null;
+  };
+  gameLoop=setInterval(()=>{
+    ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+    ctx.strokeStyle='#ff4500'; ctx.lineWidth=6;
+    ctx.beginPath(); ctx.moveTo(hoop.x,hoop.y); ctx.lineTo(hoop.x+hoop.w,hoop.y); ctx.stroke();
+    ctx.strokeStyle='#ffd700'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(hoop.x+hoop.w/2,hoop.y); ctx.lineTo(hoop.x+hoop.w/2,hoop.y+60); ctx.stroke();
+    ctx.strokeStyle='#1a3a1a'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(0,320); ctx.lineTo(c.width,320); ctx.stroke();
+    ctx.font='48px serif'; ctx.textAlign='center'; ctx.fillText('🏀',80,300);
+    if(dragStart){
+      ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=2; ctx.setLineDash([5,5]);
+      ctx.beginPath(); ctx.moveTo(80,290); ctx.lineTo(80-(dragStart.x-80)*0.5,290-(dragStart.y-290)*0.5+20); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    if(ball){
+      ball.vy+=0.4; ball.x+=ball.vx; ball.y+=ball.vy;
+      const cx=hoop.x+hoop.w/2;
+      if(Math.abs(ball.x-cx)<hoop.w/2&&Math.abs(ball.y-hoop.y)<20&&ball.vy>0){score++;setScore(score);ball=null;msg.textContent='🏆 GOL! Skor: '+score;}
+      else if(ball.y>c.height+50||ball.x<-50||ball.x>c.width+50){ball=null;msg.textContent='😞 Kaçırdın! '+shots+' atış yapıldı.';}
+      else{ctx.font='32px serif'; ctx.fillText('🏀',ball.x,ball.y);}
+    }
+    ctx.fillStyle='white'; ctx.font='14px Orbitron,monospace'; ctx.textAlign='left'; ctx.fillText('SKOR: '+score,10,20);
+    if(!ball&&!dragStart) msg.textContent='🏀 Sürükle ve bırak ile at!';
+  },16);
+}
+
+// ─── 13. WORD SCRAMBLE ───
+function buildWordScramble(ui){
+  const words=[['PYTHON','Programlama dili'],['GALAKSI','Yıldız topluluğu'],['NEXUS','Bağlantı merkezi'],['ROBOT','Otonom makine'],['LAZER','Işın silahı'],['BULUT','Su buharı kümesi'],['PIXEL','Ekran noktası'],['KOMUT','İşlem emri']];
+  let current=0, score=0, timeLeft=60;
+  function shuffle(str){return str.split('').sort(()=>Math.random()-0.5).join('');}
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='display:flex;flex-direction:column;align-items:center;gap:12px;padding:10px;width:100%;';
+  const timerEl=document.createElement('div');
+  timerEl.style.cssText='font-family:Orbitron,monospace;font-size:1.5rem;color:#ff006e;';
+  const scramEl=document.createElement('div');
+  scramEl.style.cssText='font-family:Orbitron,monospace;font-size:1.8rem;color:#00f5ff;letter-spacing:6px;';
+  const clueEl=document.createElement('div');
+  clueEl.style.cssText='color:#8899bb;font-size:0.85rem;';
+  const inp=document.createElement('input');
+  inp.style.cssText='background:#0c1525;border:1px solid #1a3a5a;color:#00f5ff;padding:8px 14px;border-radius:6px;font-size:1rem;font-family:Exo 2,sans-serif;text-align:center;width:80%;outline:none;';
+  inp.placeholder='Cevabı yaz...';
+  const btn=document.createElement('button');
+  btn.textContent='✅ Kontrol Et'; btn.className='submit-rating';
+  btn.onclick=()=>{
+    if(inp.value.toUpperCase()===words[current][0]){score+=Math.ceil(timeLeft/3);setScore(score);current=(current+1)%words.length;inp.value='';updateWord();}
+    else{inp.style.borderColor='#ff006e';setTimeout(()=>inp.style.borderColor='#1a3a5a',500);}
+  };
+  inp.onkeydown=e=>{if(e.key==='Enter')btn.click();};
+  function updateWord(){ scramEl.textContent=shuffle(words[current][0]); clueEl.textContent='İpucu: '+words[current][1]; }
+  wrapper.append(timerEl,scramEl,clueEl,inp,btn); ui.appendChild(wrapper);
+  updateWord();
+  const msg=mkMsg(); msg.textContent='🔤 Karışık harfleri düzenle!'; ui.appendChild(msg);
+  gameLoop=setInterval(()=>{
+    timeLeft--;timerEl.textContent='⏱ '+timeLeft+'s';
+    if(timeLeft<=0){clearInterval(gameLoop);msg.textContent='⏰ Süre doldu! Final skor: '+score;inp.disabled=true;btn.disabled=true;}
+  },1000);
+}
+
+// ─── 14. TOWER DEFENSE ───
+function buildTowerDefense(ui){
+  const c=document.createElement('canvas'); c.width=380; c.height=320; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  startTD(c,msg);
+}
+function startTD(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  const PATH=[[0,160],[60,160],[60,80],[180,80],[180,240],[300,240],[300,160],[380,160]];
+  let towers=[{x:120,y:130,range:70,dmg:10,fire:0}], enemies=[], bullets=[], wave=1, gold=100, lives=10, score=0, frame=0;
+  function spawnEnemy(){
+    enemies.push({x:0,y:160,hp:50+wave*20,maxHp:50+wave*20,speed:1+wave*0.2,pi:0,pf:0});
+  }
+  function movePath(e){
+    if(e.pi>=PATH.length-1){lives--;e.dead=true;return;}
+    const tx=PATH[e.pi+1][0], ty=PATH[e.pi+1][1];
+    const dx=tx-e.x, dy=ty-e.y, dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<e.speed){e.x=tx;e.y=ty;e.pi++;}
+    else{e.x+=dx/dist*e.speed;e.y+=dy/dist*e.speed;}
+  }
+  c.onclick=e=>{
+    const r=c.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+    if(gold>=50){towers.push({x:mx,y:my,range:80,dmg:15,fire:0});gold-=50;msg.textContent='🏰 Kule yerleştirildi!';}
+    else msg.textContent='💰 Yeterli altın yok! ('+gold+'/50)';
+  };
+  gameLoop=setInterval(()=>{
+    frame++;
+    if(frame%90===0)spawnEnemy();
+    if(lives<=0){clearInterval(gameLoop);msg.textContent='💀 Yıkıldın! Final skor: '+score;return;}
+    if(enemies.length===0&&frame>90&&frame%400===0)wave++;
+    towers.forEach(t=>{
+      t.fire=Math.max(0,t.fire-1);
+      if(t.fire>0)return;
+      const target=enemies.find(e=>!e.dead&&Math.hypot(e.x-t.x,e.y-t.y)<t.range);
+      if(target){bullets.push({x:t.x,y:t.y,tx:target,dmg:t.dmg});t.fire=30;}
+    });
+    bullets=bullets.filter(b=>{
+      const dx=b.tx.x-b.x,dy=b.tx.y-b.y,dist=Math.hypot(dx,dy);
+      if(dist<6){b.tx.hp-=b.dmg;if(b.tx.hp<=0){b.tx.dead=true;score+=10+wave*2;gold+=10;setScore(score);}return false;}
+      b.x+=dx/dist*6;b.y+=dy/dist*6;return true;
+    });
+    enemies.forEach(e=>{if(!e.dead)movePath(e);});
+    enemies=enemies.filter(e=>!e.dead);
+    ctx.fillStyle='#0a1a0a'; ctx.fillRect(0,0,c.width,c.height);
+    ctx.strokeStyle='#1a3a1a'; ctx.lineWidth=20;
+    ctx.beginPath(); ctx.moveTo(PATH[0][0],PATH[0][1]);
+    PATH.slice(1).forEach(p=>ctx.lineTo(p[0],p[1])); ctx.stroke();
+    ctx.strokeStyle='#0a2a0a'; ctx.lineWidth=16;
+    ctx.beginPath(); ctx.moveTo(PATH[0][0],PATH[0][1]);
+    PATH.slice(1).forEach(p=>ctx.lineTo(p[0],p[1])); ctx.stroke();
+    towers.forEach(t=>{
+      ctx.fillStyle='#7b2fff'; ctx.shadowColor='#7b2fff'; ctx.shadowBlur=10;
+      ctx.fillRect(t.x-10,t.y-10,20,20); ctx.shadowBlur=0;
+      ctx.strokeStyle='rgba(123,47,255,0.2)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.arc(t.x,t.y,t.range,0,Math.PI*2); ctx.stroke();
+    });
+    enemies.forEach(e=>{
+      ctx.font='20px serif'; ctx.textAlign='center'; ctx.fillText('👾',e.x,e.y+6);
+      ctx.fillStyle='#ff006e'; ctx.fillRect(e.x-15,e.y-20,30,4);
+      ctx.fillStyle='#00f5ff'; ctx.fillRect(e.x-15,e.y-20,30*(e.hp/e.maxHp),4);
+    });
+    bullets.forEach(b=>{ctx.fillStyle='#ffd700';ctx.shadowColor='#ffd700';ctx.shadowBlur=6;ctx.beginPath();ctx.arc(b.x,b.y,3,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;});
+    ctx.fillStyle='white'; ctx.font='12px Orbitron,monospace'; ctx.textAlign='left';
+    ctx.fillText('❤ '+lives+' | 💰 '+gold+' | 🌊 '+wave,6,18);
+    msg.textContent='🏰 Tıkla = kule koy (50 altın) | Skor: '+score;
+  },16);
+}
+
+// ─── 15. BRICK BREAKER ───
+function buildBrickBreaker(ui){
+  const c=document.createElement('canvas'); c.width=360; c.height=360; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  startBrick(c,msg);
+}
+function startBrick(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  let pad={x:160,w:70,y:330}, ball={x:180,y:300,vx:3,vy:-4,r:8};
+  let bricks=[], score=0, alive=true, started=false;
+  const COLS=8, BW=40, BH=18, colors=['#ff006e','#ff4500','#ffd700','#00f5ff'];
+  for(let r=0;r<4;r++)for(let cc=0;cc<COLS;cc++) bricks.push({x:10+cc*(BW+5),y:30+r*(BH+8),alive:true,hits:r<2?2:1,color:colors[r]});
+  document.onmousemove=e=>{const r=c.getBoundingClientRect();pad.x=Math.max(0,Math.min(c.width-pad.w,e.clientX-r.left-pad.w/2));};
+  document.onkeydown=e=>{
+    if(e.key==='ArrowLeft')pad.x=Math.max(0,pad.x-15);
+    if(e.key==='ArrowRight')pad.x=Math.min(c.width-pad.w,pad.x+15);
+    if(e.key===' ')started=true;
+    e.preventDefault();
+  };
+  c.onclick=()=>started=true;
+  gameLoop=setInterval(()=>{
+    if(!alive)return;
+    if(!started){ctx.fillStyle='#050a14';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='white';ctx.font='bold 1rem Orbitron,monospace';ctx.textAlign='center';ctx.fillText('Tıkla veya Boşluk ile başla',c.width/2,c.height/2);return;}
+    ball.x+=ball.vx; ball.y+=ball.vy;
+    if(ball.x-ball.r<0||ball.x+ball.r>c.width)ball.vx*=-1;
+    if(ball.y-ball.r<0)ball.vy*=-1;
+    if(ball.y+ball.r>pad.y&&ball.x>pad.x&&ball.x<pad.x+pad.w){ball.vy=-Math.abs(ball.vy);ball.vx+=(ball.x-pad.x-pad.w/2)*0.05;}
+    if(ball.y>c.height+20){alive=false;msg.textContent='💀 Top düştü! Skor: '+score;return;}
+    bricks.filter(b=>b.alive).forEach(b=>{
+      if(ball.x>b.x&&ball.x<b.x+BW&&ball.y>b.y&&ball.y<b.y+BH){
+        b.hits--;if(b.hits<=0){b.alive=false;score+=10;setScore(score);}ball.vy*=-1;
+      }
+    });
+    if(bricks.every(b=>!b.alive)){alive=false;msg.textContent='🏆 Tebrikler! Tümünü kırdın! Skor:'+score;}
+    ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+    bricks.filter(b=>b.alive).forEach(b=>{ctx.fillStyle=b.hits>1?b.color+'88':b.color;ctx.shadowColor=b.color;ctx.shadowBlur=5;ctx.fillRect(b.x,b.y,BW,BH);ctx.shadowBlur=0;});
+    ctx.fillStyle='#00f5ff'; ctx.shadowColor='#00f5ff'; ctx.shadowBlur=10; ctx.fillRect(pad.x,pad.y,pad.w,12); ctx.shadowBlur=0;
+    ctx.fillStyle='white'; ctx.shadowColor='white'; ctx.shadowBlur=10; ctx.beginPath(); ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+    ctx.fillStyle='white'; ctx.font='12px Orbitron,monospace'; ctx.textAlign='left'; ctx.fillText('SKOR: '+score,10,20);
+    msg.textContent='🧱 Mouse veya ← → ile platformu hareket ettir';
+  },16);
+}
+
+// ─── 16. TIC-TAC-TOE ───
+function buildTicTacToe(ui){
+  let board=Array(9).fill(null), player='X', aiMode=true, gameOver=false; setScore(0);
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='display:flex;flex-direction:column;align-items:center;gap:12px;padding:10px;';
+  const grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:6px;';
+  const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  function checkWin(b,p){return wins.some(w=>w.every(i=>b[i]===p));}
+  function aiMove(){
+    for(const[a,bb,c2]of wins){if(board[a]==='O'&&board[bb]==='O'&&!board[c2])return c2;if(board[a]==='O'&&!board[bb]&&board[c2]==='O')return bb;if(!board[a]&&board[bb]==='O'&&board[c2]==='O')return a;}
+    for(const[a,bb,c2]of wins){if(board[a]==='X'&&board[bb]==='X'&&!board[c2])return c2;if(board[a]==='X'&&!board[bb]&&board[c2]==='X')return bb;if(!board[a]&&board[bb]==='X'&&board[c2]==='X')return a;}
+    if(!board[4])return 4;
+    const corners=[0,2,6,8].filter(i=>!board[i]);
+    if(corners.length)return corners[Math.floor(Math.random()*corners.length)];
+    return board.findIndex(v=>!v);
+  }
+  function render(){
+    grid.innerHTML=board.map((v,i)=>`
+      <div onclick="tttClick(${i})" style="width:80px;height:80px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+        background:#0c1525;border:1px solid #1a2a4a;font-size:2rem;font-weight:900;cursor:pointer;
+        color:${v==='X'?'#00f5ff':'#ff006e'};font-family:Orbitron,monospace;
+        transition:all 0.2s;text-shadow:${v==='X'?'var(--glow)':'var(--glow2)'};">${v||''}</div>
+    `).join('');
+  }
+  window.tttClick=function(i){
+    if(board[i]||gameOver||player==='O')return;
+    board[i]='X';
+    if(checkWin(board,'X')){render();msg.textContent='🏆 Kazandın!';setScore(100);gameOver=true;return;}
+    if(board.every(Boolean)){render();msg.textContent='🤝 Berabere!';gameOver=true;return;}
+    player='O'; render();
+    setTimeout(()=>{
+      const ai=aiMove(); board[ai]='O';
+      if(checkWin(board,'O')){render();msg.textContent='😈 AI kazandı!';setScore(0);gameOver=true;return;}
+      if(board.every(Boolean)){render();msg.textContent='🤝 Berabere!';gameOver=true;return;}
+      player='X'; render(); msg.textContent='❌ Senin sıran!';
+    },500);
+  };
+  render();
+  wrapper.appendChild(grid); ui.appendChild(wrapper);
+  const msg=mkMsg(); msg.textContent='❌ Sen X\'sin, AI O oynar. Hamle yap!'; ui.appendChild(msg);
+  const btns=mkBtns(['↺ Yeni Oyun'],[()=>{board=Array(9).fill(null);player='X';gameOver=false;render();msg.textContent='❌ Yeni oyun!';setScore(0);}]); ui.appendChild(btns);
+}
+
+// ─── 17. FRUIT NINJA ───
+function buildFruitNinja(ui){
+  const c=document.createElement('canvas'); c.width=360; c.height=360; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  startFruitNinja(c,msg);
+}
+function startFruitNinja(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  let fruits=[], score=0, lives=3, mouseX=0, mouseY=0, prevX=0, prevY=0, trail=[];
+  const EMOJIS=['🍉','🍎','🍊','🍋','🍇','🍓','🥝','🍑'];
+  c.onmousemove=e=>{const r=c.getBoundingClientRect();prevX=mouseX;prevY=mouseY;mouseX=e.clientX-r.left;mouseY=e.clientY-r.top;trail.push({x:mouseX,y:mouseY,t:Date.now()});};
+  gameLoop=setInterval(()=>{
+    if(lives<=0){ctx.fillStyle='#050a14';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='white';ctx.font='bold 1.2rem Orbitron,monospace';ctx.textAlign='center';ctx.fillText('GAME OVER',c.width/2,c.height/2-20);ctx.fillText('Skor: '+score,c.width/2,c.height/2+20);return;}
+    if(Math.random()<0.03) fruits.push({x:Math.random()*300+30,y:c.height+20,vx:(Math.random()-0.5)*3,vy:-10-Math.random()*4,emoji:Math.random()<0.1?'💣':EMOJIS[Math.floor(Math.random()*EMOJIS.length)],r:22,cut:false});
+    fruits=fruits.filter(f=>{
+      f.x+=f.vx; f.y+=f.vy; f.vy+=0.3;
+      if(f.y>c.height+40&&!f.cut){if(f.emoji!=='💣')lives--;return false;}
+      if(f.y>c.height+80)return false;
+      if(!f.cut){
+        const dx=mouseX-f.x, dy=mouseY-f.y;
+        const pdx=prevX-f.x, pdy=prevY-f.y;
+        if(Math.sqrt(dx*dx+dy*dy)<f.r||Math.sqrt(pdx*pdx+pdy*pdy)<f.r){
+          f.cut=true;
+          if(f.emoji==='💣'){lives--;msg.textContent='💥 BOMBA! ❤'.repeat(lives);}
+          else{score+=10;setScore(score);}
+          return false;
+        }
+      }
+      return true;
+    });
+    trail=trail.filter(t=>Date.now()-t.t<150);
+    ctx.fillStyle='rgba(5,10,20,0.7)'; ctx.fillRect(0,0,c.width,c.height);
+    if(trail.length>1){
+      ctx.strokeStyle='rgba(0,245,255,0.8)'; ctx.lineWidth=3; ctx.shadowColor='#00f5ff'; ctx.shadowBlur=8;
+      ctx.beginPath(); ctx.moveTo(trail[0].x,trail[0].y);
+      trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); ctx.shadowBlur=0;
+    }
+    fruits.forEach(f=>{ctx.font=`${f.r*2}px serif`;ctx.textAlign='center';ctx.fillText(f.emoji,f.x,f.y+f.r);});
+    ctx.fillStyle='white'; ctx.font='14px Orbitron,monospace'; ctx.textAlign='left';
+    ctx.fillText('SKOR: '+score+'  ❤'.repeat(Math.max(0,lives)),10,20);
+    msg.textContent='🍉 Mouse ile kes, bombadan kaç!';
+  },16);
+}
+
+// ─── 18. SUDOKU ───
+function buildSudoku(ui){
+  const base=[[5,3,0,0,7,0,0,0,0],[6,0,0,1,9,5,0,0,0],[0,9,8,0,0,0,0,6,0],[8,0,0,0,6,0,0,0,3],[4,0,0,8,0,3,0,0,1],[7,0,0,0,2,0,0,0,6],[0,6,0,0,0,0,2,8,0],[0,0,0,4,1,9,0,0,5],[0,0,0,0,8,0,0,7,9]];
+  const solution=[[5,3,4,6,7,8,9,1,2],[6,7,2,1,9,5,3,4,8],[1,9,8,3,4,2,5,6,7],[8,5,9,7,6,1,4,2,3],[4,2,6,8,5,3,7,9,1],[7,1,3,9,2,4,8,5,6],[9,6,1,5,3,7,2,8,4],[2,8,7,4,1,9,6,3,5],[3,4,5,2,8,6,1,7,9]];
+  let board=base.map(r=>[...r]), selected=null, errors=0;
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='display:flex;flex-direction:column;align-items:center;gap:8px;padding:5px;';
+  const grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(9,1fr);gap:1px;background:#1a2a4a;border:2px solid #00f5ff;border-radius:4px;';
+  function render(){
+    grid.innerHTML=''; let correct=0,total=0;
+    for(let r=0;r<9;r++)for(let c2=0;c2<9;c2++){
+      const cell=document.createElement('div'), fixed=base[r][c2]!==0, val=board[r][c2];
+      const isSelected=selected&&selected[0]===r&&selected[1]===c2;
+      const isErr=!fixed&&val&&val!==solution[r][c2];
+      cell.style.cssText=`width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+        font-size:0.9rem;font-weight:${fixed?'700':'400'};cursor:${fixed?'default':'pointer'};
+        background:${isSelected?'#0a2a4a':isErr?'#2a0a0a':'#050a14'};
+        color:${fixed?'#e0eaff':isErr?'#ff006e':'#00f5ff'};
+        border-right:${(c2+1)%3===0&&c2<8?'2px solid #1a3a6a':'1px solid #0a1a2a'};
+        border-bottom:${(r+1)%3===0&&r<8?'2px solid #1a3a6a':'1px solid #0a1a2a'};`;
+      cell.textContent=val||'';
+      if(!fixed)cell.onclick=()=>{selected=[r,c2];render();};
+      if(!fixed&&val)total++;if(!fixed&&val===solution[r][c2])correct++;
+      grid.appendChild(cell);
+    }
+    setScore(Math.round(correct/81*100));
+    if(correct===total&&total>0) msg.textContent='🎉 Tebrikler! Sudoku tamamlandı!';
+  }
+  const numPad=document.createElement('div');
+  numPad.style.cssText='display:flex;gap:4px;';
+  for(let n=1;n<=9;n++){
+    const btn=document.createElement('button');
+    btn.textContent=n; btn.style.cssText='width:30px;height:30px;background:#0c1525;border:1px solid #1a2a4a;color:#00f5ff;border-radius:4px;cursor:pointer;font-family:Orbitron,monospace;';
+    btn.onclick=()=>{if(selected&&base[selected[0]][selected[1]]===0){board[selected[0]][selected[1]]=n;render();}};
+    numPad.appendChild(btn);
+  }
+  const clrBtn=document.createElement('button');
+  clrBtn.textContent='✕'; clrBtn.style.cssText='width:30px;height:30px;background:#2a0a0a;border:1px solid #ff006e;color:#ff006e;border-radius:4px;cursor:pointer;';
+  clrBtn.onclick=()=>{if(selected&&base[selected[0]][selected[1]]===0){board[selected[0]][selected[1]]=0;render();}};
+  numPad.appendChild(clrBtn);
+  wrapper.append(grid,numPad); ui.appendChild(wrapper);
+  render();
+  const msg=mkMsg(); msg.textContent='🔢 Hücreye tıkla, numara seç. Hata yaparsan kırmızı!'; ui.appendChild(msg);
+}
+
+// ─── 19. ASTEROIDS ───
+function buildAsteroids(ui){
+  const c=document.createElement('canvas'); c.width=380; c.height=360; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  startAsteroids(c,msg);
+}
+function startAsteroids(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  let ship={x:190,y:180,angle:0,vx:0,vy:0,r:12};
+  let bullets=[], asteroids=[], score=0, alive=true, frame=0;
+  function mkAsteroid(x,y,r){return{x,y,vx:(Math.random()-0.5)*2,vy:(Math.random()-0.5)*2,r:r||35+Math.random()*20,angle:0,va:(Math.random()-0.5)*0.05};}
+  for(let i=0;i<4;i++) asteroids.push(mkAsteroid(Math.random()*c.width,Math.random()*100,40));
+  let keys={};
+  document.onkeydown=e=>{
+    keys[e.key]=true;
+    if(e.key===' '){bullets.push({x:ship.x,y:ship.y,vx:Math.sin(ship.angle)*8+ship.vx,vy:-Math.cos(ship.angle)*8+ship.vy,life:60});}
+    e.preventDefault();
+  };
+  document.onkeyup=e=>keys[e.key]=false;
+  gameLoop=setInterval(()=>{
+    if(!alive)return;
+    frame++;
+    if(keys['ArrowLeft'])ship.angle-=0.07;
+    if(keys['ArrowRight'])ship.angle+=0.07;
+    if(keys['ArrowUp']){ship.vx+=Math.sin(ship.angle)*0.3;ship.vy-=Math.cos(ship.angle)*0.3;}
+    ship.vx*=0.98; ship.vy*=0.98;
+    ship.x=(ship.x+ship.vx+c.width)%c.width; ship.y=(ship.y+ship.vy+c.height)%c.height;
+    bullets=bullets.filter(b=>{b.x=(b.x+b.vx+c.width)%c.width;b.y=(b.y+b.vy+c.height)%c.height;b.life--;return b.life>0;});
+    asteroids.forEach(a=>{a.x=(a.x+a.vx+c.width)%c.width;a.y=(a.y+a.vy+c.height)%c.height;a.angle+=a.va;});
+    bullets=bullets.filter(b=>{
+      const hit=asteroids.find(a=>Math.hypot(b.x-a.x,b.y-a.y)<a.r);
+      if(hit){
+        asteroids=asteroids.filter(a=>a!==hit);
+        if(hit.r>20){asteroids.push(mkAsteroid(hit.x,hit.y,hit.r/2));asteroids.push(mkAsteroid(hit.x,hit.y,hit.r/2));}
+        score+=Math.round(100/hit.r*10);setScore(score);
+        if(asteroids.length<3)for(let i=0;i<2;i++)asteroids.push(mkAsteroid(Math.random()>0.5?0:c.width,Math.random()*c.height,40));
+        return false;
+      }
+      return true;
+    });
+    if(asteroids.some(a=>Math.hypot(ship.x-a.x,ship.y-a.y)<a.r-5)){alive=false;msg.textContent='💥 Çarpışma! Skor: '+score;return;}
+    ctx.fillStyle='rgba(5,10,20,0.85)'; ctx.fillRect(0,0,c.width,c.height);
+    asteroids.forEach(a=>{
+      ctx.save();ctx.translate(a.x,a.y);ctx.rotate(a.angle);
+      ctx.strokeStyle='#7b2fff';ctx.shadowColor='#7b2fff';ctx.shadowBlur=8;ctx.lineWidth=2;
+      ctx.beginPath();
+      for(let i=0;i<8;i++){const ang=i/8*Math.PI*2, rr=a.r*(0.8+Math.sin(i*3)*0.2);ctx.lineTo(Math.cos(ang)*rr,Math.sin(ang)*rr);}
+      ctx.closePath();ctx.stroke();ctx.shadowBlur=0;ctx.restore();
+      ctx.font='1rem serif';ctx.textAlign='center';ctx.fillText('☄️',a.x,a.y+6);
+    });
+    bullets.forEach(b=>{ctx.fillStyle='#ffd700';ctx.shadowColor='#ffd700';ctx.shadowBlur=6;ctx.beginPath();ctx.arc(b.x,b.y,3,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;});
+    ctx.save();ctx.translate(ship.x,ship.y);ctx.rotate(ship.angle);
+    ctx.fillStyle='#00f5ff';ctx.shadowColor='#00f5ff';ctx.shadowBlur=15;
+    ctx.beginPath();ctx.moveTo(0,-ship.r);ctx.lineTo(-ship.r*0.6,ship.r*0.7);ctx.lineTo(ship.r*0.6,ship.r*0.7);ctx.closePath();ctx.fill();
+    ctx.shadowBlur=0;ctx.restore();
+    ctx.fillStyle='white';ctx.font='12px Orbitron,monospace';ctx.textAlign='left';ctx.fillText('SKOR: '+score,10,20);
+    msg.textContent='☄️ ←→: döndür | ↑: itki | Boşluk: ateş';
+  },16);
+}
+
+// ─── 20. PIANO TILES ───
+function buildPianoTiles(ui){
+  const c=document.createElement('canvas'); c.width=320; c.height=400; ui.appendChild(c);
+  const msg=mkMsg(); ui.appendChild(msg);
+  startPiano(c,msg);
+}
+function startPiano(c,msg){
+  stopGame(); setScore(0);
+  const ctx=c.getContext('2d');
+  const COLS=4, TW=c.width/COLS, TH=80;
+  let tiles=[], score=0, speed=3, alive=true, frame=0;
+  function addTile(){const col=Math.floor(Math.random()*COLS); tiles.push({x:col*TW,y:-TH,w:TW-4,h:TH,col,hit:false});}
+  addTile();
+  c.onclick=e=>{
+    const r=c.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+    const col=Math.floor(mx/TW);
+    const hit=tiles.find(t=>!t.hit&&t.col===col&&t.y+t.h>c.height-100&&t.y<c.height);
+    if(hit){hit.hit=true;score++;setScore(score);speed=Math.min(12,3+score*0.2);}
+    else{alive=false;msg.textContent='❌ Kaçırdın! Skor: '+score;}
+  };
+  gameLoop=setInterval(()=>{
+    if(!alive)return;
+    frame++;
+    if(tiles.length===0||tiles[tiles.length-1].y>c.height/3)addTile();
+    tiles=tiles.filter(t=>{
+      t.y+=speed;
+      if(t.y>c.height+10&&!t.hit){alive=false;msg.textContent='💀 Kaçırdın! Skor: '+score;return false;}
+      return true;
+    });
+    ctx.fillStyle='#050a14'; ctx.fillRect(0,0,c.width,c.height);
+    for(let i=1;i<COLS;i++){ctx.strokeStyle='#1a2a4a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(i*TW,0);ctx.lineTo(i*TW,c.height);ctx.stroke();}
+    const hitZone=c.height-100;
+    ctx.strokeStyle='rgba(255,0,110,0.3)'; ctx.lineWidth=2; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(0,hitZone); ctx.lineTo(c.width,hitZone); ctx.stroke(); ctx.setLineDash([]);
+    tiles.filter(t=>!t.hit).forEach(t=>{
+      const isInZone=t.y+t.h>hitZone&&t.y<c.height;
+      ctx.fillStyle=isInZone?'#00f5ff':'#1a1a3a';
+      ctx.shadowColor=isInZone?'#00f5ff':'transparent'; ctx.shadowBlur=isInZone?15:0;
+      ctx.fillRect(t.x+2,t.y,t.w,t.h); ctx.shadowBlur=0;
+    });
+    ctx.fillStyle='white'; ctx.font='14px Orbitron,monospace'; ctx.textAlign='center'; ctx.fillText('SKOR: '+score,c.width/2,25);
+    msg.textContent='🎹 Parlayan kutulara tıkla!';
+  },16);
+}
+
+// ─── HELPERS ───
+function mkMsg(){const d=document.createElement('div');d.className='game-msg';return d;}
+function mkBtns(labels,fns){
+  const d=document.createElement('div');d.className='game-controls';
+  labels.forEach((l,i)=>{const b=document.createElement('button');b.className='gc-btn';b.textContent=l;b.onclick=fns[i];d.appendChild(b);});
+  return d;
+}
+
+// ─── INIT ───
+renderGames(GAMES);
+updateStats();
+</script>
+</body>
+</html>
